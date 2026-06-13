@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>車站資產自動提醒</title>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>車站資產自動提醒</h1>
+      <p>多資產｜保養週期｜手機通知｜CSV備份</p>
+    </div>
+    <button id="installBtn" class="secondary hidden">安裝App</button>
+  </header>
+
+  <main class="container">
+    <section class="cards summary">
+      <div class="card"><span>資產數</span><strong id="assetCount">0</strong></div>
+      <div class="card danger"><span>逾期</span><strong id="overdueCount">0</strong></div>
+      <div class="card warning"><span>即將到期</span><strong id="warningCount">0</strong></div>
+      <div class="card ok"><span>正常</span><strong id="okCount">0</strong></div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <button id="enableNotifyBtn">啟用手機通知</button>
+        <button id="testNotifyBtn" class="secondary">測試通知</button>
+        <button id="exportBtn" class="secondary">匯出CSV</button>
+        <label class="secondary file-label">匯入CSV<input id="importFile" type="file" accept=".csv" hidden /></label>
+      </div>
+      <p class="hint">提醒檢查：App開啟時每60秒自動檢查一次；到期會發出手機通知。若要「完全不用開App」背景提醒，建議接 Google Sheet + LINE 自動推播。</p>
+    </section>
+
+    <section class="grid">
+      <aside class="panel asset-list">
+        <div class="section-title">
+          <h2>資產清單</h2>
+          <button id="addAssetBtn">新增資產</button>
+        </div>
+        <div id="assetList"></div>
+      </aside>
+
+      <section class="panel detail">
+        <div id="emptyState" class="empty">請先新增或選擇資產</div>
+        <div id="detailView" class="hidden">
+          <div class="section-title">
+            <h2 id="detailTitle">資產資料</h2>
+            <button id="deleteAssetBtn" class="danger-btn">刪除</button>
+          </div>
+
+          <div class="form-grid">
+            <label>車站<input id="station" /></label>
+            <label>資產編號<input id="assetNo" /></label>
+            <label>資產名稱<input id="assetName" /></label>
+            <label>類別<input id="category" /></label>
+            <label>位置<input id="location" /></label>
+            <label>負責人<input id="responsible" /></label>
+            <label>目前數值<input id="currentMeter" type="number" /></label>
+            <label>單位<input id="unit" placeholder="km / hr / 次" /></label>
+          </div>
+          <label>備註<textarea id="notes"></textarea></label>
+
+          <div class="section-title sub">
+            <h2>保養/檢查項目</h2>
+            <button id="addItemBtn">新增項目</button>
+          </div>
+          <div id="itemList"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="assetDialog">
+    <form method="dialog" class="dialog-form">
+      <h2>新增資產</h2>
+      <label>資產名稱<input id="newAssetName" required /></label>
+      <label>資產編號<input id="newAssetNo" /></label>
+      <label>類別<input id="newAssetCategory" placeholder="車輛 / 機電設備 / 通訊設備" /></label>
+      <menu><button value="cancel" class="secondary">取消</button><button id="saveAssetBtn" value="default">新增</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="itemDialog">
+    <form method="dialog" class="dialog-form">
+      <h2>新增保養項目</h2>
+      <label>項目名稱<input id="newItemName" required placeholder="例：機油更換、月檢、電瓶檢查" /></label>
+      <label>週期數值<input id="newCycleMeter" type="number" value="1000" /></label>
+      <label>週期天數<input id="newCycleDays" type="number" value="30" /></label>
+      <label>上次數值<input id="newLastMeter" type="number" value="0" /></label>
+      <label>費用<input id="newCost" type="number" value="0" /></label>
+      <menu><button value="cancel" class="secondary">取消</button><button id="saveItemBtn" value="default">新增</button></menu>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
